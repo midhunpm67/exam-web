@@ -1,0 +1,1 @@
+<a href="{{route('login',$token)}}"><h3>link</h3></a>

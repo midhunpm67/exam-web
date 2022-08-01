@@ -39,25 +39,17 @@ class AdminRepository
         }
         return $status;
     }
-    public function register($request)
+    public function register($request,$token)
     {
-        $token = Str::random(64);
-        // $status = SendEmailJob::dispatch($request->email, $token);
-        $email = new emailVerify($token);
-        Mail::to($request->email)->send($email);
-        if (Mail::failures()) {
-            $response = "mail failure";
-        } else {
-            $request->token = $token;
-            $response['create'] = Student::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'token' => $token,
-                'verified' => 0
-            ]);
-            $response['token'] = $token;
-        }
+        $response['create'] = Student::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'token' => $token,
+            'verified' => 0
+        ]);
+        $response['token'] = $token;
+
         return $response;
     }
     public function teacherList($request)
@@ -67,7 +59,7 @@ class AdminRepository
         $length = $request->length;
         $start = $request->start;
         // getting driver data
-        $query = Admin::select('id', 'name', 'email')->where('usertype', '2');
+        $query = Admin::select('id', 'name', 'email')->where('usertype', 2);
         $count = $query->count();
         // if search has value
         if (!empty($search)) {
@@ -85,7 +77,7 @@ class AdminRepository
         // creating action buttons
         foreach ($teachers as $teacher) {
             $teacher['actions'] = "
-            <button class='btn btn-success me-2 editbtn' data-toggle='modal' data-target='#exampleModal' value='$teacher->id'><svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-pencil-square' viewBox='0 0 16 16'>
+            <button class='btn btn-success me-2 editbtn' data-toggle='modal' data-target='#edit-teacher' value='$teacher->id'><svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-pencil-square' viewBox='0 0 16 16'>
             <path d='M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z'/>
             <path fill-rule='evenodd' d='M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z'/>
              </svg></button>
@@ -109,7 +101,15 @@ class AdminRepository
         $admin->name = $request->name;
         $admin->email = $request->email;
         $admin->password = Hash::make($request->password);
+        $admin->usertype = 2;
         $admin->save();
-        dd($admin);
+        return true;
+    }
+    public function editTeacher($request)
+    {
+        return Admin::where('_id', $request->editId)->update([
+            'name' => $request->editFullname,
+            'email' => $request->editEmail
+        ]);
     }
 }

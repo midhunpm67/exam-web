@@ -1,24 +1,25 @@
 $(document).ready(function () {
     let base_url = window.location.origin;
-    $('#js-teacher-list').DataTable({
+    $('#js-exam-list').DataTable({
         'processing': true,
         'serverSide': true,
         'ajax': {
-            url: base_url + "/list-teacher",
+            url: base_url + "/exam-list-table",
             method: "POST",
             data: {
                 "_token": $('meta[name="csrf-token"]').attr('content')
             },
             cache: false
         },
-        "columns": [{
-            "data": "_id"
-        },
+        "columns": [
         {
             "data": "name"
         },
         {
-            "data": "email"
+            "data": "time"
+        },
+        {
+            "data": "status"
         },
         {
             "data": "actions"
@@ -29,6 +30,8 @@ $(document).ready(function () {
         }]
     });
 });
+
+
 $(document).on('click', '.deletebtn', function () {
     var id = $(this).val();
     let base_url = window.location.origin;
@@ -40,37 +43,18 @@ $(document).on('click', '.deletebtn', function () {
         cancelButtonText: 'No'
     }).then((result) => {
         if (result.isConfirmed) {
-            // $(this).html(action);
             $.ajax({
                 type: 'GET',
-                url: base_url + "/delete-teacher/" + id,
+                url: base_url + "/delete-exam/"+id,
                 data: {
                     '_token': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function (response) {
-                    $('#js-teacher-list').DataTable().ajax.reload();
+                    $('#js-exam-list').DataTable().ajax.reload();
                 }
             });
         } else {
             $(this).prop('disabled', false);
-        }
-    });
-});
-
-$(document).on('click', '.editbtn', function () {
-    var id = $(this).val();
-    let base_url = window.location.origin;
-    $.ajax({
-        type: 'GET',
-        url: base_url + "/get-data-byId/" + id,
-        data: {
-            '_token': $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function (response) {
-            document.getElementById('editFullname').value = response.name;
-            document.getElementById('editEmail').value = response.email;
-            document.getElementById('editId').value = response._id;
-            $('#js-teacher-list').DataTable().ajax.reload();
         }
     });
 });

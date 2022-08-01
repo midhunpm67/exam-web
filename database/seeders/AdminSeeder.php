@@ -21,21 +21,21 @@ class AdminSeeder extends Seeder
                 'name' => 'Midhun',
                 'email' => 'midhun@gmail.com',
                 'password' => Hash::make('midhun'),
-                'usertype' => '1',
+                'usertype' => 1,
   
             ],
             [
                 'name' => 'sini',
                 'email' => 'sini@gmail.com',
                 'password' => Hash::make('siniwac'),
-                'usertype' => '2',
+                'usertype' => 2,
   
             ],
             [
                 'name' => 'bibith',
                 'email' => 'bibith@gmail.com',
                 'password' => Hash::make('bibithwac'),
-                'usertype' => '2',
+                'usertype' => 2,
   
             ],
         ]);

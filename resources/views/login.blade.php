@@ -25,6 +25,16 @@
             <div class="card-header text-center">
                 <a href="" class="h1"><b>Login</b></a>
             </div>
+            @if (session('success'))
+                <div class="alert alert-success text-center fw-bolder">
+                    <p>{{ session('success') }}</p>
+                </div>
+            @endif
+            @if (session('error'))
+                <div class="alert alert-danger text-center fw-bolder">
+                    <p>{{ session('error') }}</p>
+                </div>
+            @endif
             <div class="card-body">
                 <form action="{{ route('login') }}" method="post">
                     @csrf
@@ -66,9 +76,7 @@
                         <!-- /.col -->
                     </div>
                 </form>
-                <p class="mb-1">
-                    <a href="forgot-password.html">I forgot my password</a>
-                </p>
+                <a href="{{route('register')}}">student register</a>
             </div>
             <!-- /.card-body -->
         </div>

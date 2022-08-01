@@ -4,10 +4,25 @@
 
 @extends('Layout.adminLayout')
 @section('body')
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Teacher</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Teacher v1</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
     <div class="row">
         <div class="card-body">
             <div class="d-flex justify-content-end">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addTeacher">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-person-plus" viewBox="0 0 16 16">
                         <path
@@ -19,6 +34,16 @@
             </div>
         </div>
     </div>
+    @if (session('success'))
+        <div class="alert alert-success text-center fw-bolder">
+            <p>{{ session('success') }}</p>
+        </div>
+    @endif
+    @if (session('error'))
+        <div class="alert alert-danger text-center fw-bolder">
+            <p>{{ session('error') }}</p>
+        </div>
+    @endif
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -41,7 +66,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="edit-teacher" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -49,23 +74,23 @@
                     <h5 class="modal-title" id="exampleModalLabel">Enter Details</h5>
                 </div>
                 <div class="modal-body">
-                    <form action="" method="post" class="form-horizontal form-material mx-2">
+                    <form action="{{ route('edit-teacher') }}" method="post" class="form-horizontal form-material mx-2">
                         @csrf
                         <div class="form-group">
                             <label class="col-md-12 mb-0">Full Name</label>
                             <div class="col-md-12">
                                 <input type="text" placeholder="" class="form-control ps-0 form-control-line"
-                                    name="modalfullname" value="" id="modalfullname">
+                                    name="editFullname" value="" id="editFullname">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="example-email" class="col-md-12">Email</label>
                             <div class="col-md-12">
                                 <input type="email" placeholder="" class="form-control ps-0 form-control-line"
-                                    name="modalemail" id="modalemail" value="">
+                                    name="editEmail" id="editEmail" value="">
                             </div>
                         </div>
-                        <input type="hidden" name="id" id="id" value="">
+                        <input type="hidden" name="editId" id="editId" value="">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -84,7 +109,7 @@
                     <h5 class="modal-title" id="exampleModalLabel">Enter Details</h5>
                 </div>
                 <div class="modal-body">
-                    <form action="{{route('add-teacher}}" method="post" class="form-horizontal form-material mx-2"
+                    <form action="{{ route('add-teacher') }}" method="post" class="form-horizontal form-material mx-2"
                         id="teacher-register">
                         @csrf
                         <div class="form-group">
@@ -92,6 +117,10 @@
                             <div class="col-md-12">
                                 <input type="text" placeholder="" class="form-control ps-0 form-control-line"
                                     name="name" value="" id="name">
+                                <span id="error-name" class="invalid-feedback"></span>
+                                @if ($errors->has('name'))
+                                    <span class="text-danger">{{ $errors->first('name') }}</span>
+                                @endif
                             </div>
                         </div>
                         <div class="form-group">
@@ -99,6 +128,10 @@
                             <div class="col-md-12">
                                 <input type="email" placeholder="" class="form-control ps-0 form-control-line"
                                     name="email" id="email" value="">
+                                <span id="error-email" class="invalid-feedback"></span>
+                                @if ($errors->has('email'))
+                                    <span class="text-danger">{{ $errors->first('email') }}</span>
+                                @endif
                             </div>
                         </div>
                         <div class="form-group">
@@ -106,6 +139,10 @@
                             <div class="col-md-12">
                                 <input type="password" placeholder="" class="form-control ps-0 form-control-line"
                                     name="password" id="password" value="">
+                                <span id="error-password" class="invalid-feedback"></span>
+                                @if ($errors->has('password'))
+                                    <span class="text-danger">{{ $errors->first('password') }}</span>
+                                @endif
                             </div>
                         </div>
                         <div class="form-group">
@@ -113,9 +150,13 @@
                             <div class="col-md-12">
                                 <input type="password" placeholder="" class="form-control ps-0 form-control-line"
                                     name="confirmPassword" id="confirmPassword" value="">
+                                <span id="error-confirmPassword" class="invalid-feedback"></span>
+                                @if ($errors->has('confirmPassword'))
+                                    <span class="text-danger">{{ $errors->first('confirmPassword') }}</span>
+                                @endif
                             </div>
                         </div>
-                        <input type="hidden" name="id" id="id" value="">
+                        <input type="hidden" name="addId" id="addId" value="">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -125,6 +166,8 @@
             </div>
         </div>
     </div>
+
+    
 @endsection
 @push('js')
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -137,4 +180,5 @@
     <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('/asset/js/admin/teacher-list.js') }}"></script>
+    <script src="{{ asset('/asset/js/admin/add-teacher.js') }}"></script>
 @endpush

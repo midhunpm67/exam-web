@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Mail\emailVerify;
+use App\Models\Admin;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,16 +16,21 @@ class SendEmailJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $request, $token;
+    
     // protected $request;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($request,$token)
+
+
+    public function __construct($request, $token)
     {
         $this->request = $request;
         $this->token = $token;
+        
     }
 
     /**

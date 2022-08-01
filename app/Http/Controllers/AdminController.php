@@ -9,6 +9,8 @@ use App\Jobs\SendEmailJob;
 use App\Mail\emailVerify;
 use App\Repositories\AdminRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\ViewErrorBag;
 use Nette\Utils\Json;
@@ -33,25 +35,32 @@ class AdminController extends Controller
                 return view('Student.dashboard');
             }
         } else {
-            return view('login');
+            return back()->with('error', 'These credentials do not match our records..!');
         }
     }
+    public function logout()
+    {
+        Auth::logout();
+        return redirect('/login');
+    }   
     public function adminDashboard()
     {
-        return view('Admin.dashboard');
+        return view('Admin.dashboard.dashboard');
     }
     public function register(Request $request)
     {
-        // dispatch(new SendEmailJob($request->email));
-
-        // $status = SendEmailJob::dispatch($request->email);
-
-        $response = $this->adminRepository->register($request);
+        $tkn = Str::random(64);
+        SendEmailJob::dispatch($request->email, $tkn);
+        if (Mail::failures()) {
+            $response = "mail failed";
+        } else {
+            $response = $this->adminRepository->register($request,$tkn);
+        }
         return response()->json($response);
     }
     public function listTeacher()
     {
-        return view('Admin.list-teacher');
+        return view('Admin.teacher.list-teacher');
     }
     public function teacherJsonData(Request $request)
     {
@@ -68,13 +77,14 @@ class AdminController extends Controller
         $response = $this->adminRepository->getTeacherData(request()->id);
         return response()->json($response);
     }
-    // public function listStudent()
-    // {
-
-    // }
     public function createTeacher(TeacherRegisterRequest $request)
     {
         $create = $this->adminRepository->addTeacher($request);
-        return true;
+        return back()->with('success', 'New teacher details added..!');
+    }
+    public function editTeacher(Request $request)
+    {
+        $this->adminRepository->editTeacher($request);
+        return back()->with('success', 'Teacher details updated..!');
     }
 }

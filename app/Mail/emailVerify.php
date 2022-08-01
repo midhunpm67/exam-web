@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Mail;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -10,14 +11,15 @@ class emailVerify extends Mailable
 {
     use Queueable, SerializesModels;
 
+    protected $tkn;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($token)
+    public function __construct($tkn)
     {
-       $this->token = $token;
+        $this->token = $tkn;
     }
 
     /**
@@ -27,6 +29,6 @@ class emailVerify extends Mailable
      */
     public function build()
     {
-        return $this->view('email.verify-email',["token"=>$this->token]);
+        return $this->view('email.verify-email', ["token" => $this->token]);
     }
 }

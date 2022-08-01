@@ -21,21 +21,21 @@ class StudentSeeder extends Seeder
                 'name' => 'student',
                 'email' => 'student@gmail.com',
                 'password' => Hash::make('student'),
-                'usertype' => '3',
+                'usertype' => 3,
   
             ],
             [
                 'name' => 'student1',
                 'email' => 'student1@gmail.com',
                 'password' => Hash::make('student1'),
-                'usertype' => '3',
+                'usertype' => 3,
   
             ],
             [
                 'name' => 'student2',
                 'email' => 'student2@gmail.com',
                 'password' => Hash::make('student2'),
-                'usertype' => '3',
+                'usertype' => 3,
   
             ],
         ]);
